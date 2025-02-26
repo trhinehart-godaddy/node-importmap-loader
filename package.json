@@ -16,8 +16,9 @@
     "build:src": "esbuild src/**/*.ts --outdir=dist",
     "build:types": "tsc",
     "test": "run-s test:*",
+    "test:types": "tsc --noEmit",
     "test:react": "cross-env IMPORT_MAP_BASE_PATH=./test/react tsx --import ./src/register.ts ./test/react/index.js",
-    "test:types": "tsc --noEmit"
+    "test:react-cache": "cross-env IMPORT_MAP_TTL=1000 IMPORT_MAP_BASE_PATH=./test/react tsx --import ./src/register.ts ./test/react/index.js"
   },
   "dependencies": {
     "@import-maps/resolve": "^2.0.0"

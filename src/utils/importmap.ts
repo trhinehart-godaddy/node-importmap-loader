@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 
 import * as importMaps from '@import-maps/resolve';
 
-import { IMPORT_MAP_BASE_PATH_URL, IMPORT_MAP_PATH } from '../constants/path.js';
+import { IMPORT_MAP_BASE_PATH_URL, IMPORT_MAP_PATH, IMPORT_MAP_TTL } from '../constants/config.js';
 
 import type { ParsedImportMap } from '@import-maps/resolve';
 
@@ -24,5 +24,9 @@ export async function loadImportMap(){
 }
 
 export async function resolve(specifier: string, parent: URL = IMPORT_MAP_BASE_PATH_URL){
-  return importMaps.resolve(specifier, await loadImportMap(), parent);
+  const resolved = importMaps.resolve(specifier, await loadImportMap(), parent);
+  if (resolved.matched) {
+    resolved.resolvedImport.hash = Math.floor(Date.now() / IMPORT_MAP_TTL).toString();
+  }
+  return resolved;
 }
